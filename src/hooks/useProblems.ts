@@ -28,9 +28,22 @@ export function useProblems() {
         saveProblems(next);
     }
 
+    function changeProblem(
+        updateProblem: Problem
+    ){
+        const next = problems.map(
+            (problem) => 
+                problem.id === updateProblem.id ? updateProblem : problem
+        )
+
+        setProblems(next);
+        saveProblems(next);
+    }
+
     return {
         problems,
         addProblem,
         deleteProblem,
+        changeProblem,
     }
 }

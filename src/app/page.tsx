@@ -4,13 +4,12 @@ import { useState } from "react";
 
 import { Separator } from "@/components/ui/separator";
 
-
 import { AddButton } from "@/components/addButton";
 import { ProblemCard } from "@/components/problemCard";
 import { SearchBox } from "@/components/searchBox";
 import { Header } from "@/components/header";
 
-import { Problem } from "@/types/problem";
+import { Problem, Tag } from "@/types/problem";
 import { useProblems } from "@/hooks/useProblems";
 
 export default function Home() {
@@ -18,7 +17,7 @@ export default function Home() {
     const [searchText, setSearchText] = useState("");
     
     const {
-        problems, addProblem, deleteProblem 
+        problems, addProblem, deleteProblem, changeProblem,
     } = useProblems();
 
     const filteredProblems = problems.filter(problem => {
@@ -49,6 +48,7 @@ export default function Home() {
                 key={prob.id}
                 problem={prob}
                 deleteProblem={deleteProblem}
+                changeProblem={changeProblem}
               ></ProblemCard>
           ))}
         </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, RefreshCcw } from "lucide-react";
+import { Pencil } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,34 +17,18 @@ import {
   ToggleGroup,
   ToggleGroupItem,
 } from "@/components/ui/toggle-group"
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from "@/components/ui/input-group"
 
 import { Problem, Tag } from "@/types/problem";
 import { useProblems } from "@/hooks/useProblems";
 import { TAGS } from "@/constants/tags";
-import { fetchProblemInfo } from "@/lib/atcoderProblems";
-import { url } from "inspector";
 
 type AddButtonProps = {
-    addProblem: (problem: Problem) => void
+    problem: Problem,
+    changeProblem: (problem: Problem) => void
 }
 
-export function AddButton({ addProblem }: AddButtonProps){
-    const [newProblem, setNewProblem] = useState<Problem>({
-        id: "",
-        contest: "",
-        contnum: "",
-        title: "",
-        diff: 0,
-        tags: [],
-        url: "",
-        memo: "",
-        isSolved: false,
-    });
+export function ChangeButton({ problem, changeProblem }: AddButtonProps){
+    const [newProblem, setNewProblem] = useState<Problem>(problem);
     // const [number, setNumber] = useState("");
     // const [title, setTitle] = useState("");
     // const [link, setLink] = useState("");
@@ -56,13 +40,13 @@ export function AddButton({ addProblem }: AddButtonProps){
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button><Plus/>Add</Button>
+                <Button variant={"outline"}><Pencil/></Button>
             </DialogTrigger>
 
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>
-                        Add Problem
+                        Change Problem
                     </DialogTitle>
                 </DialogHeader>
                 <Separator></Separator>
@@ -99,38 +83,13 @@ export function AddButton({ addProblem }: AddButtonProps){
                     </Field>
                     <Field>
                         <FieldLabel>Problem link</FieldLabel>
-                        <InputGroup>
-                            <InputGroupInput placeholder="https://"
+                        <Input placeholder="https://"
                             value={newProblem.url}
                             onChange={(e) => 
                                 setNewProblem({
                                     ...newProblem,
                                     url: e.target.value})
                             } />
-                            <Button
-                                type="button" 
-                                onClick={async () => {
-                                    const problemId = newProblem.url.split("/").at(-1);
-                                    if (!problemId) return;
-
-                                    const match = problemId.match(/^([a-z]+)(\d+)_([a-z]+)$/i);
-                                    if (!match) return;
-
-                                    const fproblem = await fetchProblemInfo(problemId);
-
-                                    const [, cont, num, prob] = match;
-
-                                    setNewProblem(prev => ({  // ← prevを使う
-                                        ...prev,
-                                        contest: cont.toUpperCase(),
-                                        contnum: num,
-                                        title: `${fproblem.title}`,
-                                    }));
-
-                                }}>
-                                <RefreshCcw/>
-                            </Button>
-                        </InputGroup>
                     </Field>
 
                     <Field>
@@ -163,11 +122,8 @@ export function AddButton({ addProblem }: AddButtonProps){
                     <DialogClose asChild>
                         <Button type="submit" 
                             onClick={() =>{
-                                addProblem({
-                                    ...newProblem,
-                                    id: crypto.randomUUID()  // idを生成
-                                });
-                            }}>Add</Button>
+                                changeProblem(newProblem);
+                            }}>Change</Button>
                     </DialogClose>
                 </DialogFooter>
 

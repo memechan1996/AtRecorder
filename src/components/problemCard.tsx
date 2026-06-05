@@ -26,17 +26,20 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Problem, Tag } from "@/types/problem";
 import { useProblems } from "@/hooks/useProblems";
 import { TAGS } from "@/constants/tags";
+import { ChangeButton } from "@/components/changeButton"
 
 
 
 type ProblemCardProps = {
     problem: Problem,
-    deleteProblem: (id: string) => void
+    deleteProblem: (id: string) => void,
+    changeProblem: (updateProbrem: Problem) => void,
 }
 
 export function ProblemCard({
     problem,
-    deleteProblem
+    deleteProblem,
+    changeProblem,
 }: ProblemCardProps) {
 
 
@@ -56,10 +59,16 @@ export function ProblemCard({
                             <Badge className="m-0.5">{tag}</Badge>
                     ))}
                 </ScrollArea>
+                <div className='flex flex-wrap gap-2 items-start justify-end'>
+                    <Button variant="outline" onClick={() => deleteProblem(problem.id)}><Trash /></Button>
+                    <ChangeButton 
+                        problem={problem}
+                        changeProblem={changeProblem}>
+                    </ChangeButton>
+                </div>
+
             </CardContent>
-            <CardFooter className="justify-end">
-                <Button onClick={() => deleteProblem(problem.id)}><Trash /></Button>
-            </CardFooter>
+
         </Card>
     )
 }
